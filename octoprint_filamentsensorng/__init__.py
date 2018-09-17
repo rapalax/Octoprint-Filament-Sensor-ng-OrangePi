@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 
-class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
+class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
                              octoprint.plugin.EventHandlerPlugin,
                              octoprint.plugin.TemplatePlugin,
                              octoprint.plugin.SettingsPlugin):
@@ -35,6 +35,10 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
         return int(self._settings.get(["mode"]))
 
     @property
+    def confirmations(self):
+        return int(self._settings.get(["confirmations"]))
+
+    @property
     def no_filament_gcode(self):
         return str(self._settings.get(["no_filament_gcode"])).splitlines()
 
@@ -57,7 +61,7 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
             self._logger.info("Pin not configured, won't work unless configured!")
 
     def on_after_startup(self):
-        self._logger.info("Filament Sensor Reloaded started")
+        self._logger.info("FilamentSensor-ng started")
         self._setup_sensor()
 
     def get_settings_defaults(self):
@@ -66,6 +70,7 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
             bounce  = 250,  # Debounce 250ms
             switch  = 0,    # Normally Open
             mode    = 0,    # Board Mode
+            confirmations=0,# Confirm that we're actually out of filament
             no_filament_gcode = '',
             pause_print = True,
         )
@@ -95,13 +100,13 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
             Events.PRINT_RESUMED
         ):
             self._logger.info("%s: Enabling filament sensor." % (event))
-            if self.sensor_enabled():
-                GPIO.remove_event_detect(self.pin)
-                GPIO.add_event_detect(
-                    self.pin, GPIO.BOTH,
-                    callback=self.sensor_callback,
-                    bouncetime=self.bounce
-                )
+            # if self.sensor_enabled():
+                # GPIO.remove_event_detect(self.pin)
+                # GPIO.add_event_detect(
+                    # self.pin, GPIO.BOTH,
+                    # callback=self.sensor_callback,
+                    # bouncetime=self.bounce
+                # )
         # Disable sensor
         elif event in (
             Events.PRINT_DONE,

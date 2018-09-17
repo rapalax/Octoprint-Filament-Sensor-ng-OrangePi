@@ -1,9 +1,12 @@
-# OctoPrint-FilamentReloaded
+# OctoPrint-FilamentSensor-ng
+
+I made this because [Octoprint-Filament-Reloaded](https://github.com/kontakt/Octoprint-Filament-Reloaded) would segfault and I wanted more options.
 
 [OctoPrint](http://octoprint.org/) plugin that integrates with a filament sensor hooked up to a Raspberry Pi GPIO pin and allows the filament spool to be changed during a print if the filament runs out.
 
 Future developments are planned to include multiple filament sensors and pop-ups.
 
+Initial work based on the [Octoprint-Filament-Reloaded](https://github.com/kontakt/Octoprint-Filament-Reloaded) plugin by kontakt.
 Initial work based on the [Octoprint-Filament](https://github.com/MoonshineSG/Octoprint-Filament) plugin by MoonshineSG.
 
 ## Required sensor
@@ -22,8 +25,7 @@ This plugin is using the GPIO.BOARD numbering scheme, the pin being used needs t
 
 ## Installation
 
-* Install via the bundled [Plugin Manager](https://github.com/foosel/OctoPrint/wiki/Plugin:-Plugin-Manager).
-* Manually using this URL: https://github.com/kontakt/Octoprint-Filament-Reloaded/archive/master.zip
+* Manually using this URL: https://github.com/Red-M/Octoprint-Filament-Sensor-ng/archive/master.zip
 
 ## Configuration
 
