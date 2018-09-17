@@ -103,15 +103,12 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         ):
             self._logger.info("%s: Enabling filament sensor." % (event))
             if self.sensor_enabled():
-                self._logger.info(1)
                 GPIO.remove_event_detect(self.pin)
-                self._logger.info(2)
                 GPIO.add_event_detect(
                     self.pin, GPIO.BOTH,
                     callback=self.sensor_callback,
                     bouncetime=self.poll_time
                 )
-                self._logger.info(3)
         # Disable sensor
         elif event in (
             Events.PRINT_DONE,
