@@ -131,10 +131,10 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
 
     def sensor_callback(self, _):
         sleep(self.poll_time/1000)
-        self._logger.info('Pin: '+str(GPIO.input(self.pin)))
+        #self._logger.info('Pin: '+str(GPIO.input(self.pin)))
         if self.no_filament():
-            self._logger.info('Confirmations: '+str(self.filamentsensorngPlugin_confirmations_tracking))
             self.filamentsensorngPlugin_confirmations_tracking+=1
+            self._logger.info('Confirmations: '+str(self.filamentsensorngPlugin_confirmations_tracking))
             if self.confirmations<=self.filamentsensorngPlugin_confirmations_tracking:
                 self._logger.info("Out of filament!")
                 if self.pause_print:
