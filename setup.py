@@ -21,10 +21,10 @@ plugin_version = "1.0.0"
 plugin_description = """A filament monitor that pauses the print when your filament runs out and lets you restart it."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Connor Huffine, Red_M"
+plugin_author = "Red_M"
 
 # The plugin's author's mail address.
-plugin_author_email = "chuffine@gmail.com, octoprint@red-m.net"
+plugin_author_email = "octoprint@red-m.net"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
 plugin_url = "https://github.com/Red-M/Octoprint-Filament-Reloaded"
