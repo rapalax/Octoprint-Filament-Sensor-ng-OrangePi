@@ -44,6 +44,15 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">{{ _('Debug Output:') }}</label>
+        <div class="controls" data-toggle="tooltip" title="{{ _('Debug information out to the terminal/log.') }}">
+            <select class="select-mini" data-bind="value: settings.plugins.filamentsensorng.debug_mode">
+                <option value=0>{{ _('Off') }}</option>
+                <option value=1>{{ _('On') }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
         <div class="controls" data-toggle="tooltip" title="{{ _('Beware that for some printers, pausing is incompatible with M600 (Filament change pause) as both will move the print head and it can resume at a different position as it paused.') }}">
             <label class="checkbox">
                 <input type="checkbox" data-bind="checked: settings.plugins.filamentsensorng.pause_print"> {{ _('Pause print when out of filament') }}
