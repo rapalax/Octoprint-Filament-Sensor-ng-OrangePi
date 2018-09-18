@@ -83,7 +83,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         })
     
     def debug_only_output(self, string):
-        if self.debug_mode():
+        if self.debug_mode==1:
             self._logger.info(string)
 
     def on_settings_save(self, data):
