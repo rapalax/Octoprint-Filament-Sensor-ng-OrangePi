@@ -155,7 +155,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
 
     def get_update_information(self):
         return dict(
-            octoprint_filament=dict(
+            octoprint_filamentsensorng=dict(
                 displayName="Filament Sensor NG",
                 displayVersion=self._plugin_version,
 
@@ -171,7 +171,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         )
 
 __plugin_name__ = "Filament Sensor NG"
-__plugin_version__ = "1.0.1"
+__plugin_version__ = "1.0.2"
 
 def __plugin_load__():
     global __plugin_implementation__
