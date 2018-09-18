@@ -78,6 +78,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
             'mode':0,    # Board Mode
             'confirmations':5,# Confirm that we're actually out of filament
             'no_filament_gcode':'',
+            'debug_mode':0, # Debug off!
             'pause_print':True,
         })
     
