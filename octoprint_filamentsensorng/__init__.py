@@ -18,7 +18,8 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         if GPIO.VERSION < "0.6":       # Need at least 0.6 for edge detection
             raise Exception("RPi.GPIO must be greater than 0.6")
         GPIO.setwarnings(False)        # Disable GPIO warnings
-        self.filamentsensorngPlugin_confirmations_tracking = 0
+        self.confirmations_tracking = 0
+        self.turn_off_tracking = False
 
     @property
     def pin(self):
@@ -126,7 +127,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
             Events.ERROR
         ):
             self._logger.info("%s: Disabling filament sensor." % (event))
-            GPIO.remove_event_detect(self.pin)
+            self.turn_off_tracking = True
 
     @octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
     def check_status(self):
@@ -139,19 +140,21 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         sleep(self.poll_time/1000)
         self.debug_only_output('Pin: '+str(GPIO.input(self.pin)))
         if self.no_filament():
-            self.filamentsensorngPlugin_confirmations_tracking+=1
-            self.debug_only_output('Confirmations: '+str(self.filamentsensorngPlugin_confirmations_tracking))
-            if self.confirmations<=self.filamentsensorngPlugin_confirmations_tracking:
+            self.confirmations_tracking+=1
+            self.debug_only_output('Confirmations: '+str(self.confirmations_tracking))
+            if self.confirmations<=self.confirmations_tracking:
                 self._logger.info("Out of filament!")
                 if self.pause_print:
                     self._logger.info("Pausing print.")
                     self._printer.pause_print()
+                    self.turn_off_tracking = False
+                    GPIO.remove_event_detect(self.pin)
                 if self.no_filament_gcode:
                     self._logger.info("Sending out of filament GCODE")
                     self._printer.commands(self.no_filament_gcode)
-                self.filamentsensorngPlugin_confirmations_tracking = 0
+                self.confirmations_tracking = 0
         else:
-            self.filamentsensorngPlugin_confirmations_tracking = 0
+            self.confirmations_tracking = 0
 
     def get_update_information(self):
         return dict(
