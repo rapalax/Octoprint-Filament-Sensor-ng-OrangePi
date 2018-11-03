@@ -20,6 +20,15 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label">{{ _('Send Pause Once?') }}</label>
+        <div class="controls" data-toggle="tooltip" title="{{ _('Only send a pause once if a confirmation is triggered. This does not mean the pause is sent once for the entire print. WARNING: THIS CAN ALLOW YOU TO START A PRINT WITHOUT FILAMENT LOADED!') }}">
+            <select class="select-mini" data-bind="value: settings.plugins.filamentsensorng.send_once">
+                <option value=0>{{ _('No') }}</option>
+                <option value=1>{{ _('Yes') }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label">{{ _('Switch Type:') }}</label>
         <div class="controls" data-toggle="tooltip" title="{{ _('Whether the sensor should trip when the switch goes HIGH or LOW, Normally Open is LOW when filament is present, and Normally Closed is HIGH when filament is present.') }}">
             <select class="select-mini" data-bind="value: settings.plugins.filamentsensorng.switch">

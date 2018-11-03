@@ -2,10 +2,10 @@
 from __future__ import absolute_import
 from flask import jsonify
 
+import time
 import octoprint.plugin
 from octoprint.events import Events
 import RPi.GPIO as GPIO
-from time import sleep
 
 
 class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
@@ -40,6 +40,10 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
     @property
     def confirmations(self):
         return int(self._settings.get(["confirmations"]))
+
+    @property
+    def send_once(self):
+        return int(self._settings.get(["send_once"]))
 
     @property
     def debug_mode(self):
@@ -79,6 +83,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
             'mode':0,    # Board Mode
             'confirmations':5,# Confirm that we're actually out of filament
             'no_filament_gcode':'',
+            'send_once':0,
             'debug_mode':0, # Debug off!
             'pause_print':True,
         })
@@ -137,24 +142,26 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         return jsonify( status = status )
 
     def sensor_callback(self, _):
-        sleep(self.poll_time/1000)
+        time.sleep(self.poll_time/1000)
         self.debug_only_output('Pin: '+str(GPIO.input(self.pin)))
         if self.no_filament():
             self.confirmations_tracking+=1
             self.debug_only_output('Confirmations: '+str(self.confirmations_tracking))
             if self.confirmations<=self.confirmations_tracking:
                 self._logger.info("Out of filament!")
-                if self.pause_print:
-                    self._logger.info("Pausing print.")
-                    self._printer.pause_print()
-                    self.turn_off_tracking = False
-                    GPIO.remove_event_detect(self.pin)
-                if self.no_filament_gcode:
-                    self._logger.info("Sending out of filament GCODE")
-                    self._printer.commands(self.no_filament_gcode)
+                if self.filamentsensorngPlugin_send_once_tracking==0 or self.send_once==0:
+                    if self.pause_print:
+                        self._logger.info("Pausing print.")
+                        self._printer.pause_print()
+                        self.turn_off_tracking = False
+                        GPIO.remove_event_detect(self.pin)
+                    if self.no_filament_gcode:
+                        self._logger.info("Sending out of filament GCODE")
+                        self._printer.commands(self.no_filament_gcode)
                 self.confirmations_tracking = 0
         else:
             self.confirmations_tracking = 0
+            self.filamentsensorngPlugin_send_once_tracking = 0
 
     def get_update_information(self):
         return dict(
@@ -174,7 +181,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         )
 
 __plugin_name__ = "Filament Sensor NG"
-__plugin_version__ = "1.0.2"
+__plugin_version__ = "1.0.3"
 
 def __plugin_load__():
     global __plugin_implementation__
