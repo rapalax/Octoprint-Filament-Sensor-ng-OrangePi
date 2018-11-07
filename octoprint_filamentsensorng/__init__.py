@@ -159,6 +159,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
                         self._logger.info("Sending out of filament GCODE")
                         self._printer.commands(self.no_filament_gcode)
                 self.confirmations_tracking = 0
+                self.filamentsensorngPlugin_send_once_tracking = 1
         else:
             self.confirmations_tracking = 0
             self.filamentsensorngPlugin_send_once_tracking = 0
