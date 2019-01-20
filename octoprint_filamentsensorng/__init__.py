@@ -4,7 +4,7 @@ from flask import jsonify
 
 import octoprint.plugin
 from octoprint.events import Events
-import RPi.GPIO as GPIO
+import OPi.GPIO as GPIO
 from time import sleep
 
 
@@ -14,15 +14,13 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
                              octoprint.plugin.SettingsPlugin):
 
     def initialize(self):
-        self._logger.info("Running RPi.GPIO version '{0}'".format(GPIO.VERSION))
-        if GPIO.VERSION < "0.6":       # Need at least 0.6 for edge detection
-            raise Exception("RPi.GPIO must be greater than 0.6")
+        self._logger.info("Running OPi.GPIO")
         GPIO.setwarnings(False)        # Disable GPIO warnings
         self.filamentsensorngPlugin_confirmations_tracking = 0
 
     @property
     def pin(self):
-        return int(self._settings.get(["pin"]))
+        return str(self._settings.get(["pin"]))
 
     @property
     def poll_time(self):
@@ -56,23 +54,26 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         if self.sensor_enabled():
             self._logger.info("Setting up sensor.")
             if self.mode == 0:
-                self._logger.info("Using Board Mode")
-                GPIO.setmode(GPIO.BOARD)
+				self._logger.info("Using Board Mode")
+				GPIO.setmode(GPIO.BOARD)
+            elif self.mode == 1:
+			   self._logger.info("Using BCM Mode")
+			   GPIO.setmode(GPIO.BCM)
             else:
-                self._logger.info("Using BCM Mode")
-                GPIO.setmode(GPIO.BCM)
+			   self._logger.info("Using SUNXI Mode")
+			   GPIO.setmode(GPIO.SUNXI)
             self._logger.info("Filament Sensor active on GPIO Pin [%s]"%self.pin)
-            GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(self.pin, GPIO.IN, GPIO.HIGH)
         else:
             self._logger.info("Pin not configured, won't work unless configured!")
 
     def on_after_startup(self):
-        self._logger.info("FilamentSensor-ng started")
+        self._logger.info("FilamentSensor-ng-orangePi started")
         self._setup_sensor()
 
     def get_settings_defaults(self):
         return({
-            'pin':-1,   # Default is no pin
+            'pin':'-1',   # Default is no pin
             'poll_time':250,  # Debounce 250ms
             'switch':0,    # Normally Open
             'mode':0,    # Board Mode
@@ -91,7 +92,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         self._setup_sensor()
 
     def sensor_enabled(self):
-        return self.pin != -1
+        return self.pin != '-1'
 
     def no_filament(self):
         return GPIO.input(self.pin) != self.switch
@@ -131,7 +132,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
     @octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
     def check_status(self):
         status = "-1"
-        if self.pin != -1:
+        if self.pin != '-1':
             status = str(self.no_filament())
         return jsonify( status = status )
 
@@ -156,21 +157,21 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
     def get_update_information(self):
         return dict(
             octoprint_filamentsensorng=dict(
-                displayName="Filament Sensor NG",
+                displayName="Filament Sensor NG OrangePi",
                 displayVersion=self._plugin_version,
 
                 # version check: github repository
                 type="github_release",
-                user="Red-M",
-                repo="Octoprint-Filament-Sensor-ng",
+                user="Deadly",
+                repo="Octoprint-Filament-Sensor-ng-Orangepi",
                 current=self._plugin_version,
 
                 # update method: pip
-                pip="https://github.com/Red-M/Octoprint-Filament-Sensor-ng/archive/{target_version}.zip"
+                pip="https://github.com/deadly667/Octoprint-Filament-Sensor-ng/archive/master.zip"
             )
         )
 
-__plugin_name__ = "Filament Sensor NG"
+__plugin_name__ = "Filament Sensor NG OrangePi"
 __plugin_version__ = "1.0.2"
 
 def __plugin_load__():
