@@ -31,10 +31,6 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         return int(self._settings.get(["switch"]))
 
     @property
-    def mode(self):
-        return int(self._settings.get(["mode"]))
-
-    @property
     def confirmations(self):
         return int(self._settings.get(["confirmations"]))
 
@@ -52,16 +48,8 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
 
     def _setup_sensor(self):
         if self.sensor_enabled():
-            self._logger.info("Setting up sensor.")
-            if self.mode == 0:
-				self._logger.info("Using Board Mode")
-				GPIO.setmode(GPIO.BOARD)
-            elif self.mode == 1:
-			   self._logger.info("Using BCM Mode")
-			   GPIO.setmode(GPIO.BCM)
-            else:
-			   self._logger.info("Using SUNXI Mode")
-			   GPIO.setmode(GPIO.SUNXI)
+            self._logger.info("Using SUNXI Mode")
+			GPIO.setmode(GPIO.SUNXI)
             self._logger.info("Filament Sensor active on GPIO Pin [%s]"%self.pin)
             GPIO.setup(self.pin, GPIO.IN, GPIO.HIGH)
         else:
@@ -76,7 +64,6 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
             'pin':'-1',   # Default is no pin
             'poll_time':250,  # Debounce 250ms
             'switch':0,    # Normally Open
-            'mode':0,    # Board Mode
             'confirmations':5,# Confirm that we're actually out of filament
             'no_filament_gcode':'',
             'debug_mode':0, # Debug off!
