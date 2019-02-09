@@ -12,8 +12,6 @@ Initial work based on the [Octoprint-Filament](https://github.com/MoonshineSG/Oc
 
 Using this plugin requires a filament sensor.
 
-For OrangePi use SUNXI mode and the pin being used needs to be entered by name (e.g. PA01, PC07)
-
 ## Features
 
 * Configurable GPIO pin.
@@ -29,6 +27,8 @@ For OrangePi use SUNXI mode and the pin being used needs to be entered by name (
 ## Configuration
 
 After installation, configure the plugin via OctoPrint Settings interface.
+
+The pin being used needs to be entered by name (e.g. PA01, PC07)
 
 ## OrangePI OS Configuration
 
