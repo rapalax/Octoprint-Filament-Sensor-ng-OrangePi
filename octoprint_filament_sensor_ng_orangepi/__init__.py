@@ -8,7 +8,7 @@ import OPi.GPIO as GPIO
 from time import sleep
 
 
-class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
+class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
                              octoprint.plugin.EventHandlerPlugin,
                              octoprint.plugin.TemplatePlugin,
                              octoprint.plugin.SettingsPlugin):
@@ -16,7 +16,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
     def initialize(self):
         self._logger.info("Running OPi.GPIO")
         GPIO.setwarnings(False)        # Disable GPIO warnings
-        self.filamentsensorngPlugin_confirmations_tracking = 0
+        self.filamentsensorngOrangePiPlugin_confirmations_tracking = 0
 
     @property
     def pin(self):
@@ -49,14 +49,14 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
     def _setup_sensor(self):
         if self.sensor_enabled():
             self._logger.info("Using SUNXI Mode")
-			GPIO.setmode(GPIO.SUNXI)
+            GPIO.setmode(GPIO.SUNXI)
             self._logger.info("Filament Sensor active on GPIO Pin [%s]"%self.pin)
             GPIO.setup(self.pin, GPIO.IN, GPIO.HIGH)
         else:
             self._logger.info("Pin not configured, won't work unless configured!")
 
     def on_after_startup(self):
-        self._logger.info("FilamentSensor-ng-orangePi started")
+        self._logger.info("FilamentSensor-OrangePi started")
         self._setup_sensor()
 
     def get_settings_defaults(self):
@@ -67,7 +67,7 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
             'confirmations':5,# Confirm that we're actually out of filament
             'no_filament_gcode':'',
             'debug_mode':0, # Debug off!
-            'pause_print':True,
+            'pause_print':True
         })
     
     def debug_only_output(self, string):
@@ -127,9 +127,9 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
         sleep(self.poll_time/1000)
         self.debug_only_output('Pin: '+str(GPIO.input(self.pin)))
         if self.no_filament():
-            self.filamentsensorngPlugin_confirmations_tracking+=1
-            self.debug_only_output('Confirmations: '+str(self.filamentsensorngPlugin_confirmations_tracking))
-            if self.confirmations<=self.filamentsensorngPlugin_confirmations_tracking:
+            self.filamentsensorngOrangePiPlugin_confirmations_tracking+=1
+            self.debug_only_output('Confirmations: '+str(self.filamentsensorngOrangePiPlugin_confirmations_tracking))
+            if self.confirmations<=self.filamentsensorngOrangePiPlugin_confirmations_tracking:
                 self._logger.info("Out of filament!")
                 if self.pause_print:
                     self._logger.info("Pausing print.")
@@ -137,33 +137,33 @@ class filamentsensorngPlugin(octoprint.plugin.StartupPlugin,
                 if self.no_filament_gcode:
                     self._logger.info("Sending out of filament GCODE")
                     self._printer.commands(self.no_filament_gcode)
-                self.filamentsensorngPlugin_confirmations_tracking = 0
+                self.filamentsensorngOrangePiPlugin_confirmations_tracking = 0
         else:
-            self.filamentsensorngPlugin_confirmations_tracking = 0
+            self.filamentsensorngOrangePiPlugin_confirmations_tracking = 0
 
     def get_update_information(self):
         return dict(
             octoprint_filamentsensorng=dict(
-                displayName="Filament Sensor NG OrangePi",
+                displayName="FilamentSensor OrangePi",
                 displayVersion=self._plugin_version,
 
                 # version check: github repository
                 type="github_release",
-                user="Deadly",
+                user="deadly667",
                 repo="Octoprint-Filament-Sensor-ng-Orangepi",
                 current=self._plugin_version,
 
                 # update method: pip
-                pip="https://github.com/deadly667/Octoprint-Filament-Sensor-ng/archive/master.zip"
+                pip="https://github.com/deadly667/Octoprint-Filament-Sensor-ng-OrangePi/archive/master.zip"
             )
         )
 
-__plugin_name__ = "Filament Sensor NG OrangePi"
+__plugin_name__ = "FilamentSensor OrangePi"
 __plugin_version__ = "1.0.2"
 
 def __plugin_load__():
     global __plugin_implementation__
-    __plugin_implementation__ = filamentsensorngPlugin()
+    __plugin_implementation__ = filamentsensorngOrangePiPlugin()
 
     global __plugin_hooks__
     __plugin_hooks__ = {

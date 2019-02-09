@@ -4,14 +4,14 @@
 ### Do not forget to adjust the following variables to your own plugin.
 
 # The plugin's identifier, has to be unique
-plugin_identifier = "filamentsensorngorangepi"
+plugin_identifier = "filament_sensor_ng_orangepi"
 
 # The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
-plugin_package = "octoprint_filamentsensorng-orangepi"
+plugin_package = "octoprint_filament_sensor_ng_orangepi"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "Octoprint-FilamentSensor-ng-OrangePi"
+plugin_name = "FilamentSensor-OrangePi"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
 plugin_version = "1.0.2"
@@ -27,7 +27,7 @@ plugin_author = "Deadly"
 plugin_author_email = "deadly676@gmail.com"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
-plugin_url = "https://github.com/deadly667/Octoprint-Filament-Sensor-ng"
+plugin_url = "https://github.com/deadly667/Octoprint-Filament-Sensor-ng-OrangePi"
 
 # The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
 plugin_license = "GPLv3"
