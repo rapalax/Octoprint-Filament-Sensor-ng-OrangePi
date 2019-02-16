@@ -143,7 +143,7 @@ class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
 
     def get_update_information(self):
         return dict(
-            octoprint_filamentsensorng=dict(
+            octoprint_filament_sensor_ng_orangepi=dict(
                 displayName="FilamentSensor OrangePi",
                 displayVersion=self._plugin_version,
 
