@@ -46,6 +46,10 @@ class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
     def pause_print(self):
         return self._settings.get_boolean(["pause_print"])
 
+    @property
+    def always_enabled(self):
+        return self._settings.get_boolean(["always_enabled"])
+
     def _setup_sensor(self):
         if self.sensor_enabled():
             self._logger.info("Using SUNXI Mode")
@@ -67,7 +71,8 @@ class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
             'confirmations':5,# Confirm that we're actually out of filament
             'no_filament_gcode':'',
             'debug_mode':0, # Debug off!
-            'pause_print':True
+            'pause_print':True,
+            'always_enabled':True 
         })
     
     def debug_only_output(self, string):
@@ -113,8 +118,9 @@ class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
             Events.PRINT_CANCELLED,
             Events.ERROR
         ):
-            self._logger.info("%s: Disabling filament sensor." % (event))
-            GPIO.remove_event_detect(self.pin)
+            if not self.always_enabled:
+                self._logger.info("%s: Disabling filament sensor." % (event))
+                GPIO.remove_event_detect(self.pin)
 
     @octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
     def check_status(self):
@@ -159,7 +165,8 @@ class filamentsensorngOrangePiPlugin(octoprint.plugin.StartupPlugin,
         )
 
 __plugin_name__ = "FilamentSensor OrangePi"
-__plugin_version__ = "1.0.2"
+__plugin_version__ = "1.0.3"
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
     global __plugin_implementation__

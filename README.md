@@ -37,10 +37,11 @@ Since we are accessing the GPIO as a non root user we need to configure the OS t
  If you want to be able to use the library as a non root user, you will need to setup a `UDEV` rule to grant you permissions first. 
  This can be accomplished as follows: 
  ```
+ $ sudo groupadd -r gpio
  $ sudo usermod -aG gpio <current_user>
  $ sudo nano /etc/udev/rules.d/99-gpio.rules
  ```
- That should add your user to the GPIO group, create a new ``UDEV`` rule, and open it in the Nano text editor. 
+ That should create the gpio goup, add your user to the GPIO group, create a new ``UDEV`` rule, and open it in the Nano text editor. 
  Enter the following into Nano
  ```
    SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'" 

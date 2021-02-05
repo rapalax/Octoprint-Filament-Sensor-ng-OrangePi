@@ -50,4 +50,11 @@
             </label>
         </div>
     </div>
+        <div class="control-group">
+        <div class="controls" data-toggle="tooltip" title="{{ _('Leave the sensor active even after cancelling or pausing.') }}">
+            <label class="checkbox">
+                <input type="checkbox" data-bind="checked: settings.plugins.filament_sensor_ng_orangepi.always_enabled"> {{ _('Leave sensor on') }}
+            </label>
+        </div>
+    </div>
 </form>
